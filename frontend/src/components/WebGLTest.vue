@@ -13,7 +13,11 @@ export default {
     name: 'WebGLTest',
     mounted() {
         var canvas = document.getElementById("glcanvas");
-        
+        this.viewportWidth = canvas.width;
+        this.viewportHeight = canvas.height;
+
+        console.log(this.viewportWidth, this.viewportHeight)
+
         let gl = this.initWebGL(canvas);
         if(!gl)
             return
@@ -49,6 +53,10 @@ export default {
         },
         drawTriangle(gl) {
             console.log(gl)
+
+            //gl.viewport(0,0,gl)
+            //gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+
             const vertexData = new Float32Array([ 0, 1, 0, 1, -1, 0, -1, -1, 0, ]); 
             const buffer = gl.createBuffer()
             
