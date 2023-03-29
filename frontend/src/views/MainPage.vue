@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button @click="this.$router.push('ComTest')">통신 테스트</button>
-    <button @click="this.$router.push('WebGLTest')">WebGL 테스트</button>
+    <button @click="this.$router.push('ComTestPage')">통신 테스트</button>
+    <button @click="this.$router.push('WebGLPage')">WebGL 테스트</button>
   </div>
 </template>
 

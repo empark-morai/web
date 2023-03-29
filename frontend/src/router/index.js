@@ -1,7 +1,7 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
-import MainPage from '@/components/MainPage.vue'
-import WebGLTest from '@/components/WebGLTest'
-import ComTest from '@/components/ComTest'
+import MainPage from '@/views/MainPage.vue'
+import WebGLPage from '@/views/WebGLPage'
+import ComTestPage from '@/views/ComTestPage'
 
 const routerHistory = createWebHashHistory();
 
@@ -12,9 +12,9 @@ const routes = [
         component: MainPage,
     },
     {
-        path: '/WebGLTest',
-        name: 'WebGLTest',
-        component: WebGLTest,
+        path: '/WebGLPage',
+        name: 'WebGLPage',
+        component: WebGLPage,
     },
     /*{
         path: '/WebGLTest',
@@ -22,9 +22,9 @@ const routes = [
         component: WebGLTest,
     },*/
     {
-        path: '/ComTest',
-        name: 'ComTest',
-        component: ComTest,
+        path: '/ComTestPage',
+        name: 'ComTestPage',
+        component: ComTestPage,
     },
 ];
 

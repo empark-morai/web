@@ -101,7 +101,6 @@ function drawScene(gl, programInfo, buffers, squareRotation=null) {
     
 
     if(programInfo.dimension == 3) {
-        console.log('뀨')
         const vertexCount = 36;
         const type = gl.UNSIGNED_SHORT;
         const offset = 0;
