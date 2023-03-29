@@ -31,8 +31,7 @@ export default {
         gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);      // Clear the color as well as the depth buffer.
         
         //this.moveRect(gl)
-        this.demo2(gl)
-        
+        this.demo3(gl)
 
         this.gl = gl
     },
@@ -105,7 +104,25 @@ export default {
             };
 
             const positions = [1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0];
-            const buffers = initBuffers(gl, positions);
+            const colors = [
+                1.0,
+                1.0,
+                1.0,
+                1.0, // white
+                1.0,
+                0.0,
+                0.0,
+                1.0, // red
+                0.0,
+                1.0,
+                0.0,
+                1.0, // green
+                0.0,
+                0.0,
+                1.0,
+                1.0, // blue
+            ];
+            const buffers = initBuffers(gl, positions, colors);
 
             setColorAttribute(gl, buffers, programInfo);
             drawScene(gl, programInfo, buffers);
@@ -130,7 +147,25 @@ export default {
             };
 
             const positions = [1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0];
-            const buffers = initBuffers(gl, positions);
+            const colors = [
+                1.0,
+                1.0,
+                1.0,
+                1.0, // white
+                1.0,
+                0.0,
+                0.0,
+                1.0, // red
+                0.0,
+                1.0,
+                0.0,
+                1.0, // green
+                0.0,
+                0.0,
+                1.0,
+                1.0, // blue
+            ];
+            const buffers = initBuffers(gl, positions, colors);
 
             setColorAttribute(gl, buffers, programInfo);
             let then = 0;
@@ -149,7 +184,65 @@ export default {
             requestAnimationFrame(render);
         },
         demo3(gl) {
+            let deltaTime = 0;
 
+            const shaderProgram = this.initShaderProgram(gl)
+
+            const programInfo = {
+                program: shaderProgram,
+                attribLocations: {
+                    vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+                    vertexColor: gl.getAttribLocation(shaderProgram, "aVertexColor"),
+                },
+                uniformLocations: {
+                    projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
+                    modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+                },
+                dimension: 3
+            };
+
+            const positions = [
+                // Front face
+                -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0,
+                // Back face
+                -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0,
+                // Top face
+                -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0,
+                // Bottom face
+                -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0,
+                // Right face
+                1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0,
+                // Left face
+                -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0,
+            ];
+            const colors = [
+                [1.0, 1.0, 1.0, 1.0], // Front face: white
+                [1.0, 0.0, 0.0, 1.0], // Back face: red
+                [0.0, 1.0, 0.0, 1.0], // Top face: green
+                [0.0, 0.0, 1.0, 1.0], // Bottom face: blue
+                [1.0, 1.0, 0.0, 1.0], // Right face: yellow
+                [1.0, 0.0, 1.0, 1.0], // Left face: purple
+            ];
+            const buffers = initBuffers(gl, positions, colors);
+
+            let cubeRotation = 0.0;
+            setColorAttribute(gl, buffers, programInfo);
+            let then = 0;
+
+            //drawScene(gl, programInfo, buffers, cubeRotation);
+
+            // Draw the scene repeatedly
+            function render(now) {
+                now *= 0.001; // convert to seconds
+                deltaTime = now - then;
+                then = now;
+
+                drawScene(gl, programInfo, buffers, cubeRotation);
+                cubeRotation += deltaTime;
+
+                requestAnimationFrame(render);
+            }
+            requestAnimationFrame(render);
         },
         moveRect(gl) {
             gl.enable(gl.DEPTH_TEST);

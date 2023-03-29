@@ -39,7 +39,7 @@ function drawScene(gl, programInfo, buffers, squareRotation=null) {
       [-0.0, 0.0, -6.0]
     ); // amount to translate
 
-    if(squareRotation) {
+    if(squareRotation && programInfo.dimension == 2) {
         mat4.rotate(
             modelViewMatrix, // destination matrix
             modelViewMatrix, // matrix to rotate
@@ -47,36 +47,73 @@ function drawScene(gl, programInfo, buffers, squareRotation=null) {
             [0, 0, 1]
           );
     }
+    if(squareRotation && programInfo.dimension == 3) {
+        mat4.rotate(
+            modelViewMatrix, // destination matrix
+            modelViewMatrix, // matrix to rotate
+            squareRotation, // amount to rotate in radians
+            [0, 0, 1]
+          ); // axis to rotate around (Z)
+          mat4.rotate(
+            modelViewMatrix, // destination matrix
+            modelViewMatrix, // matrix to rotate
+            squareRotation * 0.7, // amount to rotate in radians
+            [0, 1, 0]
+          ); // axis to rotate around (Y)
+          mat4.rotate(
+            modelViewMatrix, // destination matrix
+            modelViewMatrix, // matrix to rotate
+            squareRotation * 0.3, // amount to rotate in radians
+            [1, 0, 0]
+          ); // axis to rotate around (X)
+    }
   
     // Tell WebGL how to pull out the positions from the position
     // buffer into the vertexPosition attribute.
     setPositionAttribute(gl, buffers, programInfo);
   
+    if(programInfo.dimension == 3) {
+        // Tell WebGL which indices to use to index the vertices
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
+    }
+
     // Tell WebGL to use our program when drawing
     gl.useProgram(programInfo.program);
   
-    // Set the shader uniforms
-    gl.uniformMatrix4fv(
-      programInfo.uniformLocations.projectionMatrix,
-      false,
-      projectionMatrix
-    );
-    gl.uniformMatrix4fv(
-      programInfo.uniformLocations.modelViewMatrix,
-      false,
-      modelViewMatrix
-    );
-  
-    {
-      const offset = 0;
-      const vertexCount = 4;
-      gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
+
+        // Set the shader uniforms
+        gl.uniformMatrix4fv(
+        programInfo.uniformLocations.projectionMatrix,
+        false,
+        projectionMatrix
+        );
+        gl.uniformMatrix4fv(
+        programInfo.uniformLocations.modelViewMatrix,
+        false,
+        modelViewMatrix
+        );
+    
+        {
+        const offset = 0;
+        const vertexCount = 4;
+        gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
+        }
+    
+
+    if(programInfo.dimension == 3) {
+        console.log('뀨')
+        const vertexCount = 36;
+        const type = gl.UNSIGNED_SHORT;
+        const offset = 0;
+        gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
     }
-  }
+
+}
+
   
-  // Tell WebGL how to pull out the positions from the position
-  // buffer into the vertexPosition attribute.
-  function setPositionAttribute(gl, buffers, programInfo) {
+// Tell WebGL how to pull out the positions from the position
+// buffer into the vertexPosition attribute.
+function setPositionAttribute(gl, buffers, programInfo) {
     const numComponents = programInfo.dimension; // pull out 2 values per iteration
     const type = gl.FLOAT; // the data in the buffer is 32bit floats
     const normalize = false; // don't normalize
@@ -93,9 +130,9 @@ function drawScene(gl, programInfo, buffers, squareRotation=null) {
       offset
     );
     gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
-  }
+}
 
-  function setColorAttribute(gl, buffers, programInfo) {
+function setColorAttribute(gl, buffers, programInfo) {
     const numComponents = 4;
     const type = gl.FLOAT;
     const normalize = false;
@@ -111,6 +148,6 @@ function drawScene(gl, programInfo, buffers, squareRotation=null) {
       offset
     );
     gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
-  }
+}
   
-  export { drawScene, setColorAttribute };
+export { drawScene, setColorAttribute };
