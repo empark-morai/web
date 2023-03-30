@@ -2,6 +2,7 @@
   <div>
     <button @click="this.$router.push('ComTestPage')">통신 테스트</button>
     <button @click="this.$router.push('WebGLPage')">WebGL 테스트</button>
+    <button @click="this.$router.push('BabylonDemo')">Babylon 테스트</button>
   </div>
 </template>
 
@@ -19,7 +20,7 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add "scoped" attribute to limit CSS to this component only --> 런처2 0508
 <style scoped>
 h3 {
   margin: 40px 0 0;
