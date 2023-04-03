@@ -12,6 +12,10 @@
     "babylonjs": "^5.52.0",
     "core-js": "^3.8.3",
     "gl-mat4": "^1.2.0",
+    "json-loader": "^0.5.7",
+    "lodash": "^4.17.21",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "util": "^0.12.5",
     "vue": "^3.2.13",
     "vue-router": "^4.1.6",
     "vuex": "^4.0.2"

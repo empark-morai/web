@@ -9,12 +9,13 @@
 
 <script>
 import * as BABYLON from 'babylonjs';
+import LINK from '@/assets/link_set.json'
 
 export default {
     mounted() {
         var canvas = document.getElementById("babylon_canvas");        
         this.scene = this.demo_2(canvas)
-        
+        console.log(LINK)
     },
     methods: {
         demo_1(canvas) {

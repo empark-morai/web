@@ -3,6 +3,7 @@ import MainPage from '@/views/MainPage.vue'
 import WebGLPage from '@/views/WebGLPage'
 import ComTestPage from '@/views/ComTestPage'
 import BabylonDemo from '@/components/BabylonDemo'
+import MgeoDemo from '@/components/MgeoDemo'
 
 const routerHistory = createWebHashHistory();
 
@@ -20,13 +21,18 @@ const routes = [
     {
         path: '/BabylonDemo',
         name: 'BabylonDemo',
-        component: BabylonDemo,
+        component: MgeoDemo,
     },
     {
         path: '/ComTestPage',
         name: 'ComTestPage',
         component: ComTestPage,
     },
+    {
+        path: '/MgeoDemo',
+        name: 'MgeoDemo',
+        component: MgeoDemo,
+    }
 ];
 
 const router = createRouter({
