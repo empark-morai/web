@@ -99,7 +99,7 @@ export default {
             var indices = [];
             var normals = [];
 
-            var width = 3;
+            var width = 3.5;
             var path = [];
             for(let point of link_info.points) {
                 path.push(new BABYLON.Vector3(point[0], point[1], point[2]))
@@ -128,8 +128,8 @@ export default {
                     path[(p + 3) % nbPoints].subtractToRef(path[(p + 2) % nbPoints], nextLine);    
                 }
             }
-            else {
-                let lineNormal = new BABYLON.Vector3(-line.z, 0, 1 * line.x).normalize();
+            else { 
+                let lineNormal = new BABYLON.Vector3(-line.y, 1 * line.x, 0).normalize();
                 line.normalize();
                 innerData[0] = path[0];
                 outerData[0] = path[0].add(lineNormal.scale(width));
@@ -138,7 +138,7 @@ export default {
                     path[p + 2].subtractToRef(path[p + 1], nextLine);
                     angle = Math.PI - Math.acos(BABYLON.Vector3.Dot(line, nextLine)/(line.length() * nextLine.length()));			
                     let direction = BABYLON.Vector3.Cross(line, nextLine).normalize().y;			
-                    lineNormal = new BABYLON.Vector3(-line.z, 0, 1 * line.x).normalize();
+                    lineNormal = new BABYLON.Vector3(-line.y, 1 * line.x, 0).normalize();
                     line.normalize();
                     innerData[p + 1] = path[p + 1];
                     outerData[p + 1] = path[p + 1].add(lineNormal.scale(width)).add(line.scale(direction * width/Math.tan(angle/2)));		
@@ -146,7 +146,7 @@ export default {
                 }
                 if(nbPoints > 2) {
                     path[nbPoints - 1].subtractToRef(path[nbPoints - 2], line);
-                    lineNormal = new BABYLON.Vector3(-line.z, 0, 1 * line.x).normalize();
+                    lineNormal = new BABYLON.Vector3(-line.y, 1 * line.x, 0 ).normalize();
                     line.normalize();		
                     innerData[nbPoints - 1] = path[nbPoints - 1];
                     outerData[nbPoints - 1] = path[nbPoints - 1].add(lineNormal.scale(width));
@@ -224,8 +224,7 @@ export default {
                 uvs[2 * indices[4]] = (p3 - minX)/(maxX - minX);
                 uvs[2 * indices[4] + 1] = 0;
             
-                for(var i = 6; i < indices.length; i +=6) {
-                
+                for(var i = 6; i < indices.length; i +=6) {                
                     flip = (flip + 1) % 2;
                     v0 = innerData[0];
                     v1 = innerData[1].subtract(v0);
@@ -251,8 +250,6 @@ export default {
             BABYLON.VertexData._ComputeSides(BABYLON.Mesh.DOUBLESIDE, positions, indices, normals, uvs);  	
             
             //Create a custom mesh  
-
-
             const localAxes = new BABYLON.AxesViewer(this.scene, 1);
 
             var customMesh = new BABYLON.Mesh("custom", this.scene);
