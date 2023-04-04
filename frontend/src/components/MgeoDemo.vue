@@ -14,44 +14,29 @@ export default {
     mounted() {
         var canvas = document.getElementById("mgeo_canvas");        
         this.scene = this.createBase(canvas)
-        // console.log(LINK_SET)
-
         
         for(let link_info of LINK_SET) {
-            /*console.log(link_info)
-            var path = [ 	
-                new BABYLON.Vector3(-20, 0, 0),
-                new BABYLON.Vector3(-10, 0, 10),
-                new BABYLON.Vector3(0, 0, 0),
-                new BABYLON.Vector3(10, 0, 10),
-                new BABYLON.Vector3(20, 0, 0),
-                new BABYLON.Vector3(10, 0, -10)
-            ]
-            this.createLine("line", path)*/ 
             if(link_info.lazy_init)
                 continue
 
-            this.createLink2D(link_info)
+            //this.createLink(link_info)
+            this.createLink2D(link_info) 
         }
-        /*for(let i=0; i<LINK_SET.length/2; i++) {
-            console.log(i)
-            this.createLink(LINK_SET[i])
-        }*/
     },
     methods: {
         createBase(canvas) {             
             var engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
             var createScene = function() {
-                console.log(canvas)
-                // Create a basic BJS Scene object
+                // Create a basic BJS Scene object 
                 var scene = new BABYLON.Scene(engine);
                 
-                const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 400, new BABYLON.Vector3(0, 0, 0));
+                //const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 400, new BABYLON.Vector3(0, 0, 0));
+                const camera = new BABYLON.ArcRotateCamera("camera", 1.571554881093752, 2.5, 400, new BABYLON.Vector3(0, 0, 0));
                 camera.attachControl(canvas, true);
                 
                 var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(5, 10, 0), scene);
                 
-                // Return the created scene 
+                // Return the created scene
                 return scene; 
             }
 
@@ -61,17 +46,20 @@ export default {
             // run the render loop
             engine.runRenderLoop(function(){
                 scene.render();
-                //console.log(scene.cameras[0].radius)
             });
             // the canvas/window resize event handler 
             window.addEventListener('resize', function(){
                 engine.resize();
+                console.log(scene.cameras[0])
             });
+
+            // x: red, y: green, z: blue
+            new BABYLON.AxesViewer(scene, 30);
 
             return scene 
         },
         createLine(name, path) {
-            //Arrays for vertex positions and indices
+            
             const options = {
                 points: path,
                 updatable: true
@@ -79,11 +67,7 @@ export default {
             
             let lines = BABYLON.MeshBuilder.CreateLines("lines", options);
             
-            //console.log(options.points)
-            //options.points[path.length] = new BABYLON.Vector3(-20, 0, 0)
-            //console.log(options.points)
-            //console.log(path)
-
+            
             options.points[0] = new BABYLON.Vector3(-2, 1, -1);
             options.points[1] = new BABYLON.Vector3(0, -1, 0);
             options.points[2] = new BABYLON.Vector3(2, 0, 0);
@@ -115,13 +99,11 @@ export default {
             var indices = [];
             var normals = [];
 
-
-            var width = 2;
+            var width = 3;
             var path = [];
             for(let point of link_info.points) {
                 path.push(new BABYLON.Vector3(point[0], point[1], point[2]))
             }
-            
             
             var outerData = [];
             var innerData = [];
@@ -130,8 +112,9 @@ export default {
             var nbPoints = path.length;
             var line = BABYLON.Vector3.Zero();
             var nextLine = BABYLON.Vector3.Zero();
-            path[1].subtractToRef(path[0], line);
-
+            
+            path[1].subtractToRef(path[0], line); // line = path[1]-path[0]
+            
             if(nbPoints > 2 && closed) {	
                 path[2].subtractToRef(path[1], nextLine);    
                 for(var p = 0; p < nbPoints; p++) {    
@@ -147,10 +130,10 @@ export default {
             }
             else {
                 let lineNormal = new BABYLON.Vector3(-line.z, 0, 1 * line.x).normalize();
-                line.normalize();		
+                line.normalize();
                 innerData[0] = path[0];
                 outerData[0] = path[0].add(lineNormal.scale(width));
-                console.log(p)
+                
                 for(var p = 0; p < nbPoints - 2; p++) {	
                     path[p + 2].subtractToRef(path[p + 1], nextLine);
                     angle = Math.PI - Math.acos(BABYLON.Vector3.Dot(line, nextLine)/(line.length() * nextLine.length()));			
@@ -266,9 +249,16 @@ export default {
             
             BABYLON.VertexData.ComputeNormals(positions, indices, normals);
             BABYLON.VertexData._ComputeSides(BABYLON.Mesh.DOUBLESIDE, positions, indices, normals, uvs);  	
-            console.log(uvs)		
+            
             //Create a custom mesh  
+
+
+            const localAxes = new BABYLON.AxesViewer(this.scene, 1);
+
             var customMesh = new BABYLON.Mesh("custom", this.scene);
+            localAxes.xAxis.parent = customMesh;
+            localAxes.yAxis.parent = customMesh;
+            localAxes.zAxis.parent = customMesh;	
 
             //Create a vertexData object
             var vertexData = new BABYLON.VertexData();
